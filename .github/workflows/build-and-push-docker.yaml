@@ -1,0 +1,32 @@
+name: Build and push docker to ECR
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    environment: staging3
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Login to Amazon ECR
+      uses: docker/login-action@v1
+      with:
+        registry: "699527210772.dkr.ecr.us-east-1.amazonaws.com"
+        username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: "699527210772.dkr.ecr.us-east-1.amazonaws.com"
+        ECR_REPOSITORY: belive-poc
+        IMAGE_TAG: ${{ github.sha }}
+
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
