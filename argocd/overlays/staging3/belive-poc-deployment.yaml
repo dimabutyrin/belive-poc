@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: belive-poc
+spec:
+  template:
+    spec:
+      containers:
+      - image: 699527210772.dkr.ecr.us-east-1.amazonaws.com/belive-poc:aa2650c78772e32b4556a6f2a5e60545925a04ec
+        name: belive-poc
+        ports:
+        - containerPort: 80
